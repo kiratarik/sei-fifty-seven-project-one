@@ -1,3 +1,114 @@
+/* General */
 body {
-  background-color: aqua;
+  background-color: white;
+}
+
+section {
+  margin: 10px;
+  border: 2px solid black;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px black;
+  background-color: white;
+}
+
+button {
+  padding: 10px;
+  margin: 10px;
+  width: 90%;
+}
+
+
+
+/* Main Menu */
+#main-menu {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+h1 {
+  margin: 5px;
+}
+
+#menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 10px;
+
+  margin: 10px;
+  border: 2px solid black;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px black;
+  background-color: white;
+}
+
+#play-menu {
+
+}
+
+#options-menu {
+  
+}
+
+#leaderboards-menu {
+  
+}
+
+#login-menu {
+  
+}
+
+
+
+/* Main Game */
+#main-game {
+  display: flex;
+}
+
+#grid-game {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#board {
+  display: flex;
+  flex-wrap: wrap;
+  width: 50vw;
+  height: 100vw;
+  margin: 10px;
+}
+
+#board div {
+  box-shadow: 0px 0px 2px black;
+}
+
+.shape-i {
+  background-color: turquoise;
+}
+.shape-l {
+  background-color: orange;
+}
+.shape-j {
+  background-color: blue;
+}
+.shape-t {
+  background-color: purple;
+}
+.shape-s {
+  background-color: greenyellow;
+}
+.shape-z {
+  background-color: red;
+}
+.shape-o {
+  background-color: yellow;
+}
+
+/* Pause Menu */
+#pause-menu {
+  display: none;
 }
