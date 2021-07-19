@@ -15,6 +15,7 @@ let currentShapePosition = 0
 let currentShapeString = ''
 let currentPositionModifiers = []
 let gameOver = false
+const gameWidth = 10 + 2
 
 // * Functions
 // Build Grids
@@ -38,7 +39,7 @@ function buildStats(gridWidth, gridHeight, statsSelect, cellSize) {
   buildGrid(gridWidth, gridHeight, statsSelect, cellSize)
   for (let index = ((2 * gridWidth) - 1); index < (gridWidth * gridHeight); index += (3 * gridWidth)) {
     statisticsScores.push(cells[index])
-    cells[index].textContent = '000'
+    cells[index].textContent = '-1'
     cells[index].classList.add('stats-number')
   }
   buildShapeT(gridWidth, ((((0 * 3) + 2) * gridWidth) - gridWidth + 2))
@@ -68,44 +69,51 @@ function buildGame(gridWidth, gridHeight, gridSelect, cellSize) {
 function buildShapeT(gridWidth, position) {
   currentShapeString = shapeTString
   currentPositionModifiers = [0, -1, 1, -gridWidth]
-  gameOver = (checkCollision(position, currentPositionModifiers))
-  buildShapeColor(position, currentShapeString, currentPositionModifiers)
+  statisticsScores[0].textContent = parseInt(statisticsScores[0].textContent) + 1
+  buildGamePiece(position, currentShapeString, currentPositionModifiers)
 }
 function buildShapeL(gridWidth, position) {
   currentShapeString = shapeLString
   currentPositionModifiers = [0, -1, 1, -gridWidth + 1]
-  gameOver = (checkCollision(position, currentPositionModifiers))
-  buildShapeColor(position, currentShapeString, currentPositionModifiers)
+  statisticsScores[1].textContent = parseInt(statisticsScores[1].textContent) + 1
+  buildGamePiece(position, currentShapeString, currentPositionModifiers)
 }
 function buildShapeS(gridWidth, position) {
   currentShapeString = shapeSString
   currentPositionModifiers = [0, -1, -gridWidth, -gridWidth + 1]
-  gameOver = (checkCollision(position, currentPositionModifiers))
-  buildShapeColor(position, currentShapeString, currentPositionModifiers)
+  statisticsScores[2].textContent = parseInt(statisticsScores[2].textContent) + 1
+  buildGamePiece(position, currentShapeString, currentPositionModifiers)
 }
 function buildShapeO(gridWidth, position) {
   currentShapeString = shapeOString
   currentPositionModifiers = [0, 1, -gridWidth, -gridWidth + 1]
-  gameOver = (checkCollision(position, currentPositionModifiers))
-  buildShapeColor(position, currentShapeString, currentPositionModifiers)
+  statisticsScores[3].textContent = parseInt(statisticsScores[3].textContent) + 1
+  buildGamePiece(position, currentShapeString, currentPositionModifiers)
 }
 function buildShapeZ(gridWidth, position) {
   currentShapeString = shapeZString
   currentPositionModifiers = [0, 1, -gridWidth, -gridWidth - 1]
-  gameOver = (checkCollision(position, currentPositionModifiers))
-  buildShapeColor(position, currentShapeString, currentPositionModifiers)
+  statisticsScores[4].textContent = parseInt(statisticsScores[4].textContent) + 1
+  buildGamePiece(position, currentShapeString, currentPositionModifiers)
 }
 function buildShapeJ(gridWidth, position) {
   currentShapeString = shapeJString
   currentPositionModifiers = [0, -1, 1, -gridWidth - 1]
-  gameOver = (checkCollision(position, currentPositionModifiers))
-  buildShapeColor(position, currentShapeString, currentPositionModifiers)
+  statisticsScores[5].textContent = parseInt(statisticsScores[5].textContent) + 1
+  buildGamePiece(position, currentShapeString, currentPositionModifiers)
 }
 function buildShapeI(gridWidth, position) {
   currentShapeString = shapeIString
   currentPositionModifiers = [0, -1, 1, 2]
-  gameOver = (checkCollision(position, currentPositionModifiers))
-  buildShapeColor(position, currentShapeString, currentPositionModifiers)
+  statisticsScores[6].textContent = parseInt(statisticsScores[6].textContent) + 1
+  buildGamePiece(position, currentShapeString, currentPositionModifiers)
+}
+function buildGamePiece(position, currentShapeString, currentPositionModifiers) {
+  if (checkCollision(position, currentPositionModifiers)) {
+    gameOver = true
+  } else {
+    buildShapeColor(position, currentShapeString, currentPositionModifiers)
+  }
 }
 
 function buildShapeColor(position, currentShapeString, currentPositionModifiers) {
@@ -162,19 +170,52 @@ function shapeFall(gridWidth, position) {
     buildShapeColor(position, currentShapeString, currentPositionModifiers)
     buildShapeRandom(gridWidth, 17)
   }
+}
 
+function rotateClockwise() {
+  
+}
+
+function handleKeyDown(event) {
+  switch (event.which) {
+    case 37:
+      handleLeft()
+      break
+    case 39:
+      handleRight()
+      break
+  }
+}
+
+function handleLeft() {
+  deleteShapeColor(currentShapePosition, currentShapeString, currentPositionModifiers)
+  if (!checkCollision(currentShapePosition - 1, currentPositionModifiers)) {
+    currentShapePosition--
+    buildShapeColor(currentShapePosition, currentShapeString, currentPositionModifiers)
+  } else {
+    buildShapeColor(currentShapePosition, currentShapeString, currentPositionModifiers)
+  }
+}
+function handleRight() {
+  deleteShapeColor(currentShapePosition, currentShapeString, currentPositionModifiers)
+  if (!checkCollision(currentShapePosition + 1, currentPositionModifiers)) {
+    currentShapePosition++
+    buildShapeColor(currentShapePosition, currentShapeString, currentPositionModifiers)
+  } else {
+    buildShapeColor(currentShapePosition, currentShapeString, currentPositionModifiers)
+  }
 }
 
 
 // * Create Screen
 buildStats(7, 21, document.querySelector('#statistics'), 4)
-buildGame(10 + 2, 20 + 2, document.querySelector('#board'), 4)
+buildGame(gameWidth, 20 + 2, document.querySelector('#board'), 4)
 buildShapeRandom(12, 17)
 
 
 
 // * Events
-
+window.addEventListener('keydown', handleKeyDown)
 
 
 
