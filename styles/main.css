@@ -133,3 +133,9 @@ h1 {
 .shape-o {
   background-color: yellow;
 }
+.wall {
+  background-color: black;
+}
+.ceiling {
+  background-color: grey;
+}
