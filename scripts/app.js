@@ -16,6 +16,45 @@ let currentShapeString = ''
 let currentPositionModifiers = []
 let gameOver = false
 const gameWidth = 10 + 2
+let gridWidth = 7
+
+// * Objects
+
+const currentShape = {
+  nameNumber: 0,
+  nameString: 'shape-?',
+  position: 0,
+  positionModifiers: [0, 0, 0, 0],
+}
+
+const shapeLibrary = {
+  nameStrings: [
+    'shape-t',
+    'shape-l',
+    'shape-s',
+    'shape-o',
+    'shape-z',
+    'shape-j',
+    'shape-i'
+  ],
+  basePositions: [
+    [0, -1, 1, -gridWidth],
+    [0, -1, 1, -gridWidth + 1],
+    [0, -1, -gridWidth, -gridWidth + 1],
+    [0, 1, -gridWidth, -gridWidth + 1],
+    [0, 1, -gridWidth, -gridWidth - 1],
+    [0, -1, 1, -gridWidth - 1],
+    [0, -1, 1, 2]
+  ],
+  rotationTranslations: [
+    [0, 0],
+    [-1, -gridWidth, 1, gridWidth],
+    [-gridWidth - 1, -gridWidth + 1, gridWidth + 1, gridWidth - 1],
+    [-2, -gridWidth * 2, 2, gridWidth * 2]
+  ],
+}
+
+
 
 // * Functions
 // Build Grids
@@ -35,20 +74,25 @@ function buildGrid(gridWidth, gridHeight, gridSelect, cellSize) {
   }
 }
 
-function buildStats(gridWidth, gridHeight, statsSelect, cellSize) {
+function buildStats(width, gridHeight, statsSelect, cellSize) {
+  gridWidth = width
   buildGrid(gridWidth, gridHeight, statsSelect, cellSize)
   for (let index = ((2 * gridWidth) - 1); index < (gridWidth * gridHeight); index += (3 * gridWidth)) {
     statisticsScores.push(cells[index])
     cells[index].textContent = '-1'
     cells[index].classList.add('stats-number')
   }
-  buildShapeT(gridWidth, ((((0 * 3) + 2) * gridWidth) - gridWidth + 2))
-  buildShapeL(gridWidth, ((((1 * 3) + 2) * gridWidth) - gridWidth + 2))
-  buildShapeS(gridWidth, ((((2 * 3) + 2) * gridWidth) - gridWidth + 2))
-  buildShapeO(gridWidth, ((((3 * 3) + 2) * gridWidth) - gridWidth + 2))
-  buildShapeZ(gridWidth, ((((4 * 3) + 2) * gridWidth) - gridWidth + 2))
-  buildShapeJ(gridWidth, ((((5 * 3) + 2) * gridWidth) - gridWidth + 2))
-  buildShapeI(gridWidth, ((((6 * 3) + 2) * gridWidth) - gridWidth + 2))
+  for (let index = 0; index < 7; index++) {
+    const newPosition = ((((index * 3) + 2) * gridWidth) - gridWidth + 2)
+    buildShape(newPosition, index)
+  }
+  // buildShapeT(gridWidth, ((((0 * 3) + 2) * gridWidth) - gridWidth + 2))
+  // buildShapeL(gridWidth, ((((1 * 3) + 2) * gridWidth) - gridWidth + 2))
+  // buildShapeS(gridWidth, ((((2 * 3) + 2) * gridWidth) - gridWidth + 2))
+  // buildShapeO(gridWidth, ((((3 * 3) + 2) * gridWidth) - gridWidth + 2))
+  // buildShapeZ(gridWidth, ((((4 * 3) + 2) * gridWidth) - gridWidth + 2))
+  // buildShapeJ(gridWidth, ((((5 * 3) + 2) * gridWidth) - gridWidth + 2))
+  // buildShapeI(gridWidth, ((((6 * 3) + 2) * gridWidth) - gridWidth + 2))
   currentShapeString = ''
 }
 
@@ -66,6 +110,10 @@ function buildGame(gridWidth, gridHeight, gridSelect, cellSize) {
 }
 
 // Build Shapes
+function buildShape(position, shapeId) {
+  statisticsScores[shapeId].textContent = parseInt(statisticsScores[shapeId].textContent) + 1
+  buildGamePiece(position, shapeLibrary.nameStrings[shapeId], shapeLibrary.basePositions[shapeId])
+}
 function buildShapeT(gridWidth, position) {
   currentShapeString = shapeTString
   currentPositionModifiers = [0, -1, 1, -gridWidth]
@@ -173,7 +221,7 @@ function shapeFall(gridWidth, position) {
 }
 
 function rotateClockwise() {
-  
+
 }
 
 function handleKeyDown(event) {
@@ -210,7 +258,7 @@ function handleRight() {
 // * Create Screen
 buildStats(7, 21, document.querySelector('#statistics'), 4)
 buildGame(gameWidth, 20 + 2, document.querySelector('#board'), 4)
-buildShapeRandom(12, 17)
+buildShapeRandom(gameWidth, 17)
 
 
 
