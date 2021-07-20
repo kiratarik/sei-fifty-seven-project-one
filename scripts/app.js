@@ -27,32 +27,35 @@ const currentShape = {
   positionModifiers: [0, 0, 0, 0],
 }
 
-const shapeLibrary = {
-  nameStrings: [
-    'shape-t',
-    'shape-l',
-    'shape-s',
-    'shape-o',
-    'shape-z',
-    'shape-j',
-    'shape-i'
-  ],
-  basePositions: [
-    [0, -1, 1, -gridWidth],
-    [0, -1, 1, -gridWidth + 1],
-    [0, -1, -gridWidth, -gridWidth + 1],
-    [0, 1, -gridWidth, -gridWidth + 1],
-    [0, 1, -gridWidth, -gridWidth - 1],
-    [0, -1, 1, -gridWidth - 1],
-    [0, -1, 1, 2]
-  ],
-  rotationTranslations: [
-    [0, 0],
-    [-1, -gridWidth, 1, gridWidth],
-    [-gridWidth - 1, -gridWidth + 1, gridWidth + 1, gridWidth - 1],
-    [-2, -gridWidth * 2, 2, gridWidth * 2]
-  ],
+class shapeLibrary {
+  constructor(gridWidth) {
+    this.nameStrings = [
+      'shape-t',
+      'shape-l',
+      'shape-s',
+      'shape-o',
+      'shape-z',
+      'shape-j',
+      'shape-i'
+    ],
+    this.basePositions = [
+      [0, -1, 1, -gridWidth],
+      [0, -1, 1, -gridWidth + 1],
+      [0, -1, -gridWidth, -gridWidth + 1],
+      [0, 1, -gridWidth, -gridWidth + 1],
+      [0, 1, -gridWidth, -gridWidth - 1],
+      [0, -1, 1, -gridWidth - 1],
+      [0, -1, 1, 2]
+    ],
+    this.rotationTranslations = [
+      [0, 0],
+      [-1, -gridWidth, 1, gridWidth],
+      [-gridWidth - 1, -gridWidth + 1, gridWidth + 1, gridWidth - 1],
+      [-2, -gridWidth * 2, 2, gridWidth * 2]
+    ]
+  }
 }
+
 
 
 
@@ -79,12 +82,12 @@ function buildStats(width, gridHeight, statsSelect, cellSize) {
   buildGrid(gridWidth, gridHeight, statsSelect, cellSize)
   for (let index = ((2 * gridWidth) - 1); index < (gridWidth * gridHeight); index += (3 * gridWidth)) {
     statisticsScores.push(cells[index])
-    cells[index].textContent = '-1'
+    cells[index].textContent = '0'
     cells[index].classList.add('stats-number')
   }
   for (let index = 0; index < 7; index++) {
     const newPosition = ((((index * 3) + 2) * gridWidth) - gridWidth + 2)
-    buildShape(newPosition, index)
+    buildStatsShape(newPosition, index)
   }
   // buildShapeT(gridWidth, ((((0 * 3) + 2) * gridWidth) - gridWidth + 2))
   // buildShapeL(gridWidth, ((((1 * 3) + 2) * gridWidth) - gridWidth + 2))
@@ -110,52 +113,59 @@ function buildGame(gridWidth, gridHeight, gridSelect, cellSize) {
 }
 
 // Build Shapes
-function buildShape(position, shapeId) {
+function buildStatsShape(position, shapeId) {
+  const statsLibrary = new shapeLibrary(gridWidth)
+  buildGamePiece(position, statsLibrary.nameStrings[shapeId], statsLibrary.basePositions[shapeId])
+}
+function buildGameShape(position, shapeId) {
+  const gameLibrary = new shapeLibrary(gameWidth)
   statisticsScores[shapeId].textContent = parseInt(statisticsScores[shapeId].textContent) + 1
-  buildGamePiece(position, shapeLibrary.nameStrings[shapeId], shapeLibrary.basePositions[shapeId])
+  currentShapeString = gameLibrary.nameStrings[shapeId]
+  currentPositionModifiers = gameLibrary.basePositions[shapeId]
+  buildGamePiece(position, gameLibrary.nameStrings[shapeId], gameLibrary.basePositions[shapeId])
 }
-function buildShapeT(gridWidth, position) {
-  currentShapeString = shapeTString
-  currentPositionModifiers = [0, -1, 1, -gridWidth]
-  statisticsScores[0].textContent = parseInt(statisticsScores[0].textContent) + 1
-  buildGamePiece(position, currentShapeString, currentPositionModifiers)
-}
-function buildShapeL(gridWidth, position) {
-  currentShapeString = shapeLString
-  currentPositionModifiers = [0, -1, 1, -gridWidth + 1]
-  statisticsScores[1].textContent = parseInt(statisticsScores[1].textContent) + 1
-  buildGamePiece(position, currentShapeString, currentPositionModifiers)
-}
-function buildShapeS(gridWidth, position) {
-  currentShapeString = shapeSString
-  currentPositionModifiers = [0, -1, -gridWidth, -gridWidth + 1]
-  statisticsScores[2].textContent = parseInt(statisticsScores[2].textContent) + 1
-  buildGamePiece(position, currentShapeString, currentPositionModifiers)
-}
-function buildShapeO(gridWidth, position) {
-  currentShapeString = shapeOString
-  currentPositionModifiers = [0, 1, -gridWidth, -gridWidth + 1]
-  statisticsScores[3].textContent = parseInt(statisticsScores[3].textContent) + 1
-  buildGamePiece(position, currentShapeString, currentPositionModifiers)
-}
-function buildShapeZ(gridWidth, position) {
-  currentShapeString = shapeZString
-  currentPositionModifiers = [0, 1, -gridWidth, -gridWidth - 1]
-  statisticsScores[4].textContent = parseInt(statisticsScores[4].textContent) + 1
-  buildGamePiece(position, currentShapeString, currentPositionModifiers)
-}
-function buildShapeJ(gridWidth, position) {
-  currentShapeString = shapeJString
-  currentPositionModifiers = [0, -1, 1, -gridWidth - 1]
-  statisticsScores[5].textContent = parseInt(statisticsScores[5].textContent) + 1
-  buildGamePiece(position, currentShapeString, currentPositionModifiers)
-}
-function buildShapeI(gridWidth, position) {
-  currentShapeString = shapeIString
-  currentPositionModifiers = [0, -1, 1, 2]
-  statisticsScores[6].textContent = parseInt(statisticsScores[6].textContent) + 1
-  buildGamePiece(position, currentShapeString, currentPositionModifiers)
-}
+// function buildShapeT(gridWidth, position) {
+//   currentShapeString = shapeTString
+//   currentPositionModifiers = [0, -1, 1, -gridWidth]
+//   statisticsScores[0].textContent = parseInt(statisticsScores[0].textContent) + 1
+//   buildGamePiece(position, currentShapeString, currentPositionModifiers)
+// }
+// function buildShapeL(gridWidth, position) {
+//   currentShapeString = shapeLString
+//   currentPositionModifiers = [0, -1, 1, -gridWidth + 1]
+//   statisticsScores[1].textContent = parseInt(statisticsScores[1].textContent) + 1
+//   buildGamePiece(position, currentShapeString, currentPositionModifiers)
+// }
+// function buildShapeS(gridWidth, position) {
+//   currentShapeString = shapeSString
+//   currentPositionModifiers = [0, -1, -gridWidth, -gridWidth + 1]
+//   statisticsScores[2].textContent = parseInt(statisticsScores[2].textContent) + 1
+//   buildGamePiece(position, currentShapeString, currentPositionModifiers)
+// }
+// function buildShapeO(gridWidth, position) {
+//   currentShapeString = shapeOString
+//   currentPositionModifiers = [0, 1, -gridWidth, -gridWidth + 1]
+//   statisticsScores[3].textContent = parseInt(statisticsScores[3].textContent) + 1
+//   buildGamePiece(position, currentShapeString, currentPositionModifiers)
+// }
+// function buildShapeZ(gridWidth, position) {
+//   currentShapeString = shapeZString
+//   currentPositionModifiers = [0, 1, -gridWidth, -gridWidth - 1]
+//   statisticsScores[4].textContent = parseInt(statisticsScores[4].textContent) + 1
+//   buildGamePiece(position, currentShapeString, currentPositionModifiers)
+// }
+// function buildShapeJ(gridWidth, position) {
+//   currentShapeString = shapeJString
+//   currentPositionModifiers = [0, -1, 1, -gridWidth - 1]
+//   statisticsScores[5].textContent = parseInt(statisticsScores[5].textContent) + 1
+//   buildGamePiece(position, currentShapeString, currentPositionModifiers)
+// }
+// function buildShapeI(gridWidth, position) {
+//   currentShapeString = shapeIString
+//   currentPositionModifiers = [0, -1, 1, 2]
+//   statisticsScores[6].textContent = parseInt(statisticsScores[6].textContent) + 1
+//   buildGamePiece(position, currentShapeString, currentPositionModifiers)
+// }
 function buildGamePiece(position, currentShapeString, currentPositionModifiers) {
   if (checkCollision(position, currentPositionModifiers)) {
     gameOver = true
@@ -176,29 +186,30 @@ function deleteShapeColor(position, currentShapeString, currentPositionModifiers
 }
 function buildShapeRandom(gridWidth, position) {
   const randomShapeNum = Math.floor(Math.random() * 7)
-  switch (randomShapeNum) {
-    case 0:
-      buildShapeT(gridWidth, position)
-      break
-    case 1:
-      buildShapeL(gridWidth, position)
-      break
-    case 2:
-      buildShapeS(gridWidth, position)
-      break
-    case 3:
-      buildShapeO(gridWidth, position)
-      break
-    case 4:
-      buildShapeZ(gridWidth, position)
-      break
-    case 5:
-      buildShapeJ(gridWidth, position)
-      break
-    case 6:
-      buildShapeI(gridWidth, position)
-      break
-  }
+  buildGameShape(position, randomShapeNum)
+  // switch (randomShapeNum) {
+  //   case 0:
+  //     buildShapeT(gridWidth, position)
+  //     break
+  //   case 1:
+  //     buildShapeL(gridWidth, position)
+  //     break
+  //   case 2:
+  //     buildShapeS(gridWidth, position)
+  //     break
+  //   case 3:
+  //     buildShapeO(gridWidth, position)
+  //     break
+  //   case 4:
+  //     buildShapeZ(gridWidth, position)
+  //     break
+  //   case 5:
+  //     buildShapeJ(gridWidth, position)
+  //     break
+  //   case 6:
+  //     buildShapeI(gridWidth, position)
+  //     break
+  // }
   currentShapePosition = position
   console.log('build Shape')
 }
