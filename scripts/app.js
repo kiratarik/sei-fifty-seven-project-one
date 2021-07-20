@@ -3,13 +3,13 @@ const cells = []
 const statisticsScores = []
 
 // * Variables
-const shapeTString = 'shape-t'
-const shapeLString = 'shape-l'
-const shapeSString = 'shape-s'
-const shapeOString = 'shape-o'
-const shapeZString = 'shape-z'
-const shapeJString = 'shape-j'
-const shapeIString = 'shape-i'
+// const shapeTString = 'shape-t'
+// const shapeLString = 'shape-l'
+// const shapeSString = 'shape-s'
+// const shapeOString = 'shape-o'
+// const shapeZString = 'shape-z'
+// const shapeJString = 'shape-j'
+// const shapeIString = 'shape-i'
 const gameSpeedTime = 100
 let currentShapePosition = 0
 let currentShapeString = ''
@@ -21,9 +21,10 @@ let gridWidth = 7
 // * Objects
 
 const currentShape = {
-  nameNumber: 0,
+  nameId: 0,
   nameString: 'shape-?',
   position: 0,
+  rotation: 0,
   positionModifiers: [0, 0, 0, 0],
 }
 
@@ -48,11 +49,26 @@ class shapeLibrary {
       [0, -1, 1, 2]
     ],
     this.rotationTranslations = [
-      [0, 0],
+      [0, 0, 0, 0],
       [-1, -gridWidth, 1, gridWidth],
       [-gridWidth - 1, -gridWidth + 1, gridWidth + 1, gridWidth - 1],
       [-2, -gridWidth * 2, 2, gridWidth * 2]
     ]
+  }
+  rotateCurrent() {
+    const oldModifiers = currentShape.positionModifiers
+    const newModifiers = []
+    for (let indexOne = 0; indexOne < 4; indexOne++) {
+      for (let index = 0; index < 4; index++) {
+        const rotations = this.rotationTranslations[indexOne]
+        const rotation = rotations[index]
+        if (oldModifiers[indexOne] === rotation) {
+          newModifiers.push(rotations[(index + currentShape.rotation) % 4])
+          index = 4
+        }
+      }
+    }
+    currentShape.positionModifiers = newModifiers
   }
 }
 
@@ -232,7 +248,9 @@ function shapeFall(gridWidth, position) {
 }
 
 function rotateClockwise() {
-
+  currentShape.rotation = (currentShape.rotation + 1) % 4
+  const gameLibrary = new shapeLibrary(gameWidth)
+  gameLibrary.rotateCurrent()
 }
 
 function handleKeyDown(event) {
