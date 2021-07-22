@@ -1,14 +1,21 @@
 // * DOM Elements
+
+
+// * Variables
 const cells = []
 const statisticsScores = []
 let holdCells = []
-
-// * Variables
-const gameSpeedTime = 100
+let currentLevel = 1
+let speedLevel = 0
+let speedToggle = false
+let downToggle = false
+let gameIntervalId
+let gameSpeedTime = 500
 let gameOver = false
 let gridWidth = 7
 let gameWidth = 0
 let holdShapeId = -1
+let nextShapeId = Math.floor(Math.random() * 7)
 
 // * Objects
 
@@ -140,6 +147,14 @@ function deleteShapeColor() {
 }
 function buildShapeRandom() {
   currentShape.nameId = Math.floor(Math.random() * 7)
+  let tempId = holdShapeId
+  addHold('#next')
+  holdShapeId = tempId
+
+  tempId = nextShapeId
+  nextShapeId = currentShape.nameId
+  currentShape.nameId = tempId
+  currentShape.position = 17
   buildGameShape()
 }
 
@@ -157,7 +172,6 @@ function checkLine() {
     for (let index = 1; index < gridWidth; index++) {
       if (index === gridWidth - 1) {
         completeLines.push(lines[i])
-        console.log(completeLines)
       } else if (cells[(lines[i] * gridWidth) + index].className === '') { 
         index = gridWidth
       }
@@ -167,24 +181,43 @@ function checkLine() {
 }
 
 function removeLines(lines) {
+  // Line Score
+  let lineScore = parseInt(document.querySelector('#line-score').textContent)
+  lineScore += lines.length
+  document.querySelector('#line-score').textContent = lineScore
+
+  // Level increase
+  currentLevel = 1 + Math.floor(lineScore / 10)
+  if (currentLevel >= 20) {
+    currentLevel = 19
+  } else if (lines.length !== 0) {
+    speedLevel++
+    if (speedLevel % 10 === 0) {
+      speedUp()
+    }
+  }
+  document.querySelector('#level').textContent = parseInt(currentLevel)
+
+
   // score
   let score = parseInt(document.querySelector('#score').textContent)
   switch (lines.length) {
     case 1:
-      score += 100
+      score += (40 * currentLevel)
       break
     case 2:
-      score += 300
+      score += (100 * currentLevel)
       break
     case 3:
-      score += 500
+      score += (300 * currentLevel)
       break
     case 4:
-      score += 700
+      score += (1200 * currentLevel)
       break
   }
   document.querySelector('#score').textContent = score
 
+  // Remove lines
   lines = lines.sort()
   for (let i = 0; i < lines.length; i++) {
     for (let index = 1; index < gridWidth - 1; index++) {
@@ -194,6 +227,11 @@ function removeLines(lines) {
     }
   }
 
+}
+
+function speedUp() {
+  speedToggle = true
+  gameSpeedTime -= ((20 - (speedLevel / 10)) * 2)
 }
 
 function checkCollision() {
@@ -216,17 +254,18 @@ function shapeFall() {
   }
 }
 
-function addHold() {
+function addHold(location) {
   const holdLibrary = new shapeLibrary(4)
   holdShapeId = currentShape.nameId
-  holdCells = document.querySelector('#hold').childNodes
+  const holdShapeName = holdLibrary.nameStrings[holdShapeId]
+  holdCells = document.querySelector(location).childNodes
   for (let index = 0; index < 8; index++) {
     holdCells[index].className = ''
   }
   currentShape.position = 5
   currentShape.positionModifiers = holdLibrary.basePositions[holdShapeId]
   currentShape.positionModifiers.forEach(modifier => {
-    holdCells[currentShape.position + modifier].classList.add(currentShape.nameString)
+    holdCells[currentShape.position + modifier].classList.add(holdShapeName)
   })
 }
 
@@ -234,18 +273,22 @@ function handleHold() {
   if (holdShapeId === -1) {
     const originalPosition = currentShape.position
     deleteShapeColor()
-    addHold()
+    addHold('#hold')
     currentShape.position = 17
     buildShapeRandom()
   } else {
     const heldShapeId = holdShapeId
     deleteShapeColor()
-    addHold()
+    addHold('#hold')
     currentShape.position = 17
     currentShape.nameId = heldShapeId
     statisticsScores[currentShape.nameId].textContent = parseInt(statisticsScores[currentShape.nameId].textContent) - 1
     buildGameShape()
   }
+}
+
+function handleStartDrop() {
+  downToggle = true
 }
 
 function rotateClockwise() {
@@ -314,17 +357,33 @@ function handleKeyDown(event) {
       // Right Arrow Key
       handleRight()
       break
-    case 38:
-      // Up Arrow Key
+    case 40:
+      handleStartDrop()
+      break
+    case 88:
+      // X Key
       rotateClockwise()
       break
-    case 40:
-      // Up Arrow Key
+    case 90:
+      // Z Key
       rotateCounterclockwise()
       break
     case 67:
       // C Key
       handleHold()
+      break
+  }
+}
+
+function handleKeyUp(event) {
+  // If game is over ignore the following
+  if (gameOver === true) {
+    return
+  }
+
+  switch (event.which || event.keyCode) {
+    case 40:
+      setSpeed(gameSpeedTime)
       break
   }
 }
@@ -361,7 +420,8 @@ function handleRight() {
 }
 
 function startUp() {
-  buildHold(4, 2, document.querySelector('#hold'), 2.5)
+  buildHold(4, 2, document.querySelector('#hold'), 4)
+  buildHold(4, 2, document.querySelector('#next'), 4)
   buildStats(7, 21, document.querySelector('#statistics'), 2.5)
   buildGame(10, 20, document.querySelector('#board'), 4)
   currentShape.position = 17
@@ -370,20 +430,29 @@ function startUp() {
 
 // * Create Screen
 startUp()
-
-
+setSpeed(gameSpeedTime)
 
 // * Events
 window.addEventListener('keydown', handleKeyDown)
+window.addEventListener('keyup', handleKeyUp)
 
 
 
 // Intervals
-const gameIntervalId = setInterval(function(){
-  shapeFall()
-  console.log('fall')
-  if (gameOver) {
-    console.log('Game Over')
-    clearInterval(gameIntervalId)
-  }
-}, gameSpeedTime)
+function setSpeed(speed) {
+  clearInterval(gameIntervalId)
+  gameIntervalId = setInterval(function(){
+    shapeFall()
+    console.log('fall')
+    if (gameOver) {
+      console.log('Game Over')
+      clearInterval(gameIntervalId)
+    } else if (speedToggle) {
+      speedToggle = false
+      setSpeed(gameSpeedTime)
+    } else if (downToggle) {
+      downToggle = false
+      setSpeed(100)
+    }
+  }, speed)
+}
