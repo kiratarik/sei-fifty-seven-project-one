@@ -270,20 +270,42 @@ function addHold(location) {
 }
 
 function handleHold() {
+  const tempLibrary = new shapeLibrary(gridWidth)
   if (holdShapeId === -1) {
+    deleteShapeColor()
+    const tempModifiers = currentShape.positionModifiers
+    currentShape.positionModifiers = tempLibrary.basePositions[nextShapeId]
+    
+    if (!checkCollision()) {
+      const originalPosition = currentShape.position
+      addHold('#hold')
+      currentShape.position = originalPosition
+      buildShapeRandom()
+      deleteShapeColor()
+      currentShape.position = originalPosition
+      buildShapeColor()
+    } else {
+      currentShape.positionModifiers = tempModifiers
+      buildShapeColor()
+    }
+
+  } else {
     const originalPosition = currentShape.position
     deleteShapeColor()
-    addHold('#hold')
-    currentShape.position = 17
-    buildShapeRandom()
-  } else {
-    const heldShapeId = holdShapeId
-    deleteShapeColor()
-    addHold('#hold')
-    currentShape.position = 17
-    currentShape.nameId = heldShapeId
-    statisticsScores[currentShape.nameId].textContent = parseInt(statisticsScores[currentShape.nameId].textContent) - 1
-    buildGameShape()
+    const tempModifiers = currentShape.positionModifiers
+    currentShape.positionModifiers = tempLibrary.basePositions[holdShapeId]
+    
+    if (!checkCollision()) {
+      const heldShapeId = holdShapeId
+      addHold('#hold')
+      currentShape.position = originalPosition
+      currentShape.nameId = heldShapeId
+      statisticsScores[currentShape.nameId].textContent = parseInt(statisticsScores[currentShape.nameId].textContent) - 1
+      buildGameShape()
+    } else {
+      currentShape.positionModifiers = tempModifiers
+      buildShapeColor()
+    }
   }
 }
 
@@ -443,7 +465,6 @@ function setSpeed(speed) {
   clearInterval(gameIntervalId)
   gameIntervalId = setInterval(function(){
     shapeFall()
-    console.log('fall')
     if (gameOver) {
       console.log('Game Over')
       clearInterval(gameIntervalId)
