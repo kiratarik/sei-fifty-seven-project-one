@@ -143,6 +143,59 @@ function buildShapeRandom() {
   buildGameShape()
 }
 
+function checkLine() {
+  const lines = []
+  const completeLines = []
+  currentShape.positionModifiers.forEach(modifier => {
+    const line = Math.floor((currentShape.position + modifier) / gridWidth)
+    const filterLines =  lines.filter(num => num === line)
+    if (filterLines.length === 0) {
+      lines.push(line)
+    }
+  })
+  for (let i = 0; i < lines.length; i++) {
+    for (let index = 1; index < gridWidth; index++) {
+      if (index === gridWidth - 1) {
+        completeLines.push(lines[i])
+        console.log(completeLines)
+      } else if (cells[(lines[i] * gridWidth) + index].className === '') { 
+        index = gridWidth
+      }
+    }
+  }
+  removeLines(completeLines)
+}
+
+function removeLines(lines) {
+  // score
+  let score = parseInt(document.querySelector('#score').textContent)
+  switch (lines.length) {
+    case 1:
+      score += 100
+      break
+    case 2:
+      score += 300
+      break
+    case 3:
+      score += 500
+      break
+    case 4:
+      score += 700
+      break
+  }
+  document.querySelector('#score').textContent = score
+
+  lines = lines.sort()
+  for (let i = 0; i < lines.length; i++) {
+    for (let index = 1; index < gridWidth - 1; index++) {
+      for (let height = lines[i]; height > 0; height--) {
+        cells[(height * gridWidth) + index].className = cells[(height * gridWidth) + index - gridWidth].className
+      }
+    }
+  }
+
+}
+
 function checkCollision() {
   return (currentShape.positionModifiers.filter(modifier => {
     return cells[currentShape.position + modifier].classList.length !== 0
@@ -157,6 +210,7 @@ function shapeFall() {
   } else {
     currentShape.position = currentShape.position - gridWidth
     buildShapeColor()
+    checkLine()
     currentShape.position = 17
     buildShapeRandom()
   }
