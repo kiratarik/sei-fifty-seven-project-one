@@ -1,18 +1,14 @@
 // * DOM Elements
 const cells = []
 const statisticsScores = []
+let holdCells = []
 
 // * Variables
-// const shapeTString = 'shape-t'
-// const shapeLString = 'shape-l'
-// const shapeSString = 'shape-s'
-// const shapeOString = 'shape-o'
-// const shapeZString = 'shape-z'
-// const shapeJString = 'shape-j'
-// const shapeIString = 'shape-i'
 const gameSpeedTime = 100
 let gameOver = false
 let gridWidth = 7
+let gameWidth = 0
+let holdShapeId = -1
 
 // * Objects
 
@@ -66,20 +62,25 @@ function buildGrid(gridHeight, gridSelect, cellSize) {
     cell.style.height = (100 / gridHeight) + '%'
     cells.push(cell)
     gridSelect.appendChild(cell)
-    gridSelect.style.width = (cellSize * gridWidth) + 'vw'
-    gridSelect.style.height = (cellSize * gridHeight) + 'vw'
-    gridSelect.style.display = 'flex'
-    gridSelect.style.flexWrap = 'wrap'
   }
+  
+  gridSelect.style.width = (cellSize * gridWidth) + 'vw'
+  gridSelect.style.height = (cellSize * gridHeight) + 'vw'
+  gridSelect.style.display = 'flex'
+  gridSelect.style.flexWrap = 'wrap'
 }
-
+function buildHold(width, gridHeight, statsSelect, cellSize) {
+  gridWidth = width
+  buildGrid(gridHeight, statsSelect, cellSize)
+  holdCells = cells
+}
 function buildStats(width, gridHeight, statsSelect, cellSize) {
   // build grid
   gridWidth = width
   buildGrid(gridHeight, statsSelect, cellSize)
   
   // Set Shape Statistics Score display
-  for (let index = ((2 * gridWidth) - 1); index < (gridWidth * gridHeight); index += (3 * gridWidth)) {
+  for (let index = (gridWidth - 1); index < (gridWidth * gridHeight); index += (3 * gridWidth)) {
     statisticsScores.push(cells[index])
     cells[index].textContent = '-1'
     cells[index].classList.add('stats-number')
@@ -96,6 +97,7 @@ function buildStats(width, gridHeight, statsSelect, cellSize) {
 
 function buildGame(width, height, gridSelect, cellSize) {
   gridWidth = width + 2
+  gameWidth = gridWidth
   const gridHeight = height + 2
   buildGrid(gridHeight, gridSelect, cellSize)
   for (let index = 0; index < gridWidth * gridHeight; index += gridWidth) {
@@ -139,7 +141,6 @@ function deleteShapeColor() {
 function buildShapeRandom() {
   currentShape.nameId = Math.floor(Math.random() * 7)
   buildGameShape()
-  console.log('build Shape')
 }
 
 function checkCollision() {
@@ -158,6 +159,38 @@ function shapeFall() {
     buildShapeColor()
     currentShape.position = 17
     buildShapeRandom()
+  }
+}
+
+function addHold() {
+  const holdLibrary = new shapeLibrary(4)
+  holdShapeId = currentShape.nameId
+  holdCells = document.querySelector('#hold').childNodes
+  for (let index = 0; index < 8; index++) {
+    holdCells[index].className = ''
+  }
+  currentShape.position = 5
+  currentShape.positionModifiers = holdLibrary.basePositions[holdShapeId]
+  currentShape.positionModifiers.forEach(modifier => {
+    holdCells[currentShape.position + modifier].classList.add(currentShape.nameString)
+  })
+}
+
+function handleHold() {
+  if (holdShapeId === -1) {
+    const originalPosition = currentShape.position
+    deleteShapeColor()
+    addHold()
+    currentShape.position = 17
+    buildShapeRandom()
+  } else {
+    const heldShapeId = holdShapeId
+    deleteShapeColor()
+    addHold()
+    currentShape.position = 17
+    currentShape.nameId = heldShapeId
+    statisticsScores[currentShape.nameId].textContent = parseInt(statisticsScores[currentShape.nameId].textContent) - 1
+    buildGameShape()
   }
 }
 
@@ -235,6 +268,10 @@ function handleKeyDown(event) {
       // Up Arrow Key
       rotateCounterclockwise()
       break
+    case 67:
+      // C Key
+      handleHold()
+      break
   }
 }
 
@@ -270,9 +307,8 @@ function handleRight() {
 }
 
 function startUp() {
-  gridWidth = 7
-  buildStats(7, 21, document.querySelector('#statistics'), 4)
-  gridWidth = 12
+  buildHold(4, 2, document.querySelector('#hold'), 2.5)
+  buildStats(7, 21, document.querySelector('#statistics'), 2.5)
   buildGame(10, 20, document.querySelector('#board'), 4)
   currentShape.position = 17
   buildShapeRandom()
