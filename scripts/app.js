@@ -353,6 +353,11 @@ function handleHold() {
 }
 
 function rotateClockwise() {
+  // Stop Bug with I-Shape near ceiling
+  if ((Math.floor(currentShape.position) <= 12 * 2) && (currentShape.positionModifiers[3] === -2)) {
+    return
+  }
+
   // delete current shape colors
   deleteShapeColor()
 
@@ -368,6 +373,11 @@ function rotateClockwise() {
   }
 }
 function rotateCounterclockwise() {
+  // Stop Bug with I-Shape near ceiling
+  if ((Math.floor(currentShape.position) <= 12 * 2) && (currentShape.positionModifiers[3] === 2)) {
+    return
+  }
+
   // delete current shape colors
   deleteShapeColor()
 
