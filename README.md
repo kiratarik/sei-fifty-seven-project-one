@@ -20,6 +20,10 @@ I then added line completion detection and levels and scoring and speedup.
 
 I then started going through my code and anotating before i made the pause menu.
 
+Then i addded the controlls description and title.
+
+Then i wrote the Readme before fixing a bug.
+
 Overall there was a lot of coding and then checking and then finding where I went wrong. In some cases such as the Hold and Next areas there was a lot of searching involved.
 
 A point of pride was coding the shape library to take advantage of my shape building system to rotate my shapes. It was also useful in several other areas.
