@@ -216,7 +216,7 @@ function removeLines(lines) {
   document.querySelector('#level').textContent = parseInt(currentLevel)
 
 
-  // score
+  // Score - dependant on how many lines filled at once
   let score = parseInt(document.querySelector('#score').textContent)
   switch (lines.length) {
     case 1:
