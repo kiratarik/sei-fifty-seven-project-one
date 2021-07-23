@@ -542,6 +542,10 @@ function resetBoard() {
   gridWidth = 7
   holdShapeId = -1
   nextShapeId = Math.floor(Math.random() * 7)
+  // reset scores
+  document.querySelector('#score').textContent = 0
+  document.querySelector('#line-score').textContent = 0
+  document.querySelector('#level').textContent = 1
   // reset grids
   document.querySelector('#hold').textContent = ''
   document.querySelector('#next').textContent = ''
