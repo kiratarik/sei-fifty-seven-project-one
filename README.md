@@ -22,7 +22,7 @@ I then started going through my code and anotating before i made the pause menu.
 
 Then i addded the controlls description and title.
 
-Then i wrote the Readme before fixing a bug.
+Then i wrote the Readme before fixing some bugs.
 
 Overall there was a lot of coding and then checking and then finding where I went wrong. In some cases such as the Hold and Next areas there was a lot of searching involved.
 
