@@ -463,8 +463,8 @@ function handleKeyUp(event) {
 
   // look at which key unpressed
   switch (event.which || event.keyCode) {
-    case 40:
-      // Down Arrow key
+    case 32:
+      // Spacebar key
       setSpeed(gameSpeedTime)
       break
   }
