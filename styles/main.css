@@ -18,51 +18,42 @@ button {
 }
 
 h3 {
-  margin: 10px 0px 5px 0px;
+  margin: 20px 0px 5px 0px;
+}
+
+h1 {
+  text-transform: uppercase;
 }
 
 
 
-/* Main Menu */
-#main-menu {
+/* Main Menu - Unfinished */
+/* #main-menu {
   display: none;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
 }
-
 h1 {
   margin: 5px;
 }
-
 #menu {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
   padding: 10px;
-
   margin: 10px;
   border: 2px solid black;
   border-radius: 5px;
   box-shadow: 0px 0px 10px black;
   background-color: white;
-}
+} */
 
-#play-menu {
-
-}
-
-#options-menu {
-  
-}
-
-#leaderboards-menu {
-  
-}
-
-#login-menu {
-  
+/* Title */
+#title {
+  display: flex;
+  justify-content: center;
 }
 
 
@@ -70,21 +61,19 @@ h1 {
 /* Main Game */
 #main-game {
   display: flex;
+  justify-content: center;
 }
-
 #grid-game {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
 }
-
 #statistics-game {
   margin: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-
 .stats-number { 
   color: red;
   font-weight: 600;
@@ -92,7 +81,6 @@ h1 {
   letter-spacing: 2px;
   text-align: right;
 }
-
 #board {
   display: flex;
   flex-wrap: wrap;
@@ -100,22 +88,33 @@ h1 {
   height: 100vw;
   margin: 10px;
 }
-
 #board div {
   box-shadow: 0px 0px 2px black;
 }
 
 
+/* Controls Menu */
+#controls-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 
 
 /* Pause Menu */
 #pause-menu {
-  display: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: -700px;
+  background-color: grey;
 }
 
 
-/* Shapes */
+
+/* Shape colors */
 .shape-i {
   background-color: turquoise;
 }

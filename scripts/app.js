@@ -1,6 +1,3 @@
-// * DOM Elements
-
-
 // * Variables
 const cells = []
 const statisticsScores = []
@@ -13,7 +10,6 @@ let gameIntervalId
 let gameSpeedTime = 500
 let gameOver = false
 let gridWidth = 7
-let gameWidth = 0
 let holdShapeId = -1
 let nextShapeId = Math.floor(Math.random() * 7)
 
@@ -61,32 +57,39 @@ class shapeLibrary {
 // * Functions
 // Build Grids
 function buildGrid(gridHeight, gridSelect, cellSize) {
+  // reset cells
   cells.length = 0
+  // create cells
   for (let index = 0; index < gridWidth * gridHeight; index++) {
     const cell = document.createElement('div')
-    // cell.textContent = index
     cell.style.width = (100 / gridWidth) + '%'
     cell.style.height = (100 / gridHeight) + '%'
     cells.push(cell)
     gridSelect.appendChild(cell)
   }
   
-  gridSelect.style.width = (cellSize * gridWidth) + 'vw'
-  gridSelect.style.height = (cellSize * gridHeight) + 'vw'
+  // set size and flex-wrap
+  gridSelect.style.width = (cellSize * gridWidth * 6) + 'px'
+  gridSelect.style.height = (cellSize * gridHeight * 6) + 'px'
   gridSelect.style.display = 'flex'
   gridSelect.style.flexWrap = 'wrap'
 }
+
+// build 4x2 grid for Hild and Next
 function buildHold(width, gridHeight, statsSelect, cellSize) {
   gridWidth = width
   buildGrid(gridHeight, statsSelect, cellSize)
   holdCells = cells
 }
+
+// Build shape key for statistics
 function buildStats(width, gridHeight, statsSelect, cellSize) {
   // build grid
   gridWidth = width
   buildGrid(gridHeight, statsSelect, cellSize)
   
   // Set Shape Statistics Score display
+  statisticsScores.length = 0
   for (let index = (gridWidth - 1); index < (gridWidth * gridHeight); index += (3 * gridWidth)) {
     statisticsScores.push(cells[index])
     cells[index].textContent = '-1'
@@ -102,15 +105,19 @@ function buildStats(width, gridHeight, statsSelect, cellSize) {
   currentShape.nameString = ''
 }
 
+// Build Game board
 function buildGame(width, height, gridSelect, cellSize) {
+  // add borders
   gridWidth = width + 2
-  gameWidth = gridWidth
   const gridHeight = height + 2
+  // Build grid
   buildGrid(gridHeight, gridSelect, cellSize)
+  // set walls and floor with collision
   for (let index = 0; index < gridWidth * gridHeight; index += gridWidth) {
     cells[index].classList.add('wall')
     cells[index + gridWidth - 1].classList.add('wall')
   }
+  // set ceiling without collision
   for (let index = 1; index < gridWidth - 1; index++) {
     cells[(gridWidth * gridHeight) - index - 1].classList.add('wall')
     cells[index].style.backgroundColor = 'grey'
@@ -118,7 +125,7 @@ function buildGame(width, height, gridSelect, cellSize) {
 
 }
 
-// Build Shapes
+// Build Shapes - using nameId and Library
 function buildGameShape() {
   const gameLibrary = new shapeLibrary(gridWidth)
   statisticsScores[currentShape.nameId].textContent = parseInt(statisticsScores[currentShape.nameId].textContent) + 1
@@ -127,6 +134,7 @@ function buildGameShape() {
   buildGamePiece()
 }
 
+// check collision before placing on game board - Hold and Next don't need this
 function buildGamePiece() {
   if (checkCollision()) {
     gameOver = true
@@ -135,22 +143,29 @@ function buildGamePiece() {
   }
 }
 
+// build shape at exact location
 function buildShapeColor() {
   currentShape.positionModifiers.forEach(modifier => {
     cells[currentShape.position + modifier].classList.add(currentShape.nameString)
   })
 }
+
+// delete shape at exact position current shape is at
 function deleteShapeColor() {
   currentShape.positionModifiers.forEach(modifier => {
     cells[currentShape.position + modifier].classList.remove(currentShape.nameString)
   })
 }
+
+// Build new shape from Next and set new random next shape
 function buildShapeRandom() {
+  // create new random shape for Next
   currentShape.nameId = Math.floor(Math.random() * 7)
   let tempId = holdShapeId
   addHold('#next')
-  holdShapeId = tempId
 
+  // swap Ids around and build new shape
+  holdShapeId = tempId
   tempId = nextShapeId
   nextShapeId = currentShape.nameId
   currentShape.nameId = tempId
@@ -158,9 +173,11 @@ function buildShapeRandom() {
   buildGameShape()
 }
 
+// Line completeing
 function checkLine() {
   const lines = []
   const completeLines = []
+  // find lines based on shape position/modifiers and filter for no repeats
   currentShape.positionModifiers.forEach(modifier => {
     const line = Math.floor((currentShape.position + modifier) / gridWidth)
     const filterLines =  lines.filter(num => num === line)
@@ -168,6 +185,7 @@ function checkLine() {
       lines.push(line)
     }
   })
+  // check for complete lines by looking for classless cells
   for (let i = 0; i < lines.length; i++) {
     for (let index = 1; index < gridWidth; index++) {
       if (index === gridWidth - 1) {
@@ -179,7 +197,6 @@ function checkLine() {
   }
   removeLines(completeLines)
 }
-
 function removeLines(lines) {
   // Line Score
   let lineScore = parseInt(document.querySelector('#line-score').textContent)
@@ -217,7 +234,7 @@ function removeLines(lines) {
   }
   document.querySelector('#score').textContent = score
 
-  // Remove lines
+  // Remove lines - sort first then do highest lines first, left to right
   lines = lines.sort()
   for (let i = 0; i < lines.length; i++) {
     for (let index = 1; index < gridWidth - 1; index++) {
@@ -229,39 +246,52 @@ function removeLines(lines) {
 
 }
 
+// speed up over time - linked to number of times score has increased, not to lines or level, so that spped increases more slowly if you do a lot of 4 liners
 function speedUp() {
   speedToggle = true
   gameSpeedTime -= ((20 - (speedLevel / 10)) * 2)
 }
 
+// check if any of the cells have a class
 function checkCollision() {
   return (currentShape.positionModifiers.filter(modifier => {
     return cells[currentShape.position + modifier].classList.length !== 0
   }).length)
 }
 
+// Falling block
 function shapeFall() {
+  // Delete and reposition
   deleteShapeColor()
   currentShape.position = currentShape.position + gridWidth
+  // check for collision in new position
   if (!checkCollision()) {
+    // build new
     buildShapeColor()
   } else {
+    // move back and rebuild
     currentShape.position = currentShape.position - gridWidth
     buildShapeColor()
+    // check for line completing
     checkLine()
+    // new shape at top
     currentShape.position = 17
     buildShapeRandom()
   }
 }
 
+// Add shape to Hold or Next grids
 function addHold(location) {
+  // set shape id and DOM grid
   const holdLibrary = new shapeLibrary(4)
   holdShapeId = currentShape.nameId
   const holdShapeName = holdLibrary.nameStrings[holdShapeId]
   holdCells = document.querySelector(location).childNodes
+  // clear grid
   for (let index = 0; index < 8; index++) {
     holdCells[index].className = ''
   }
+  //build shape
   currentShape.position = 5
   currentShape.positionModifiers = holdLibrary.basePositions[holdShapeId]
   currentShape.positionModifiers.forEach(modifier => {
@@ -269,48 +299,57 @@ function addHold(location) {
   })
 }
 
+// if hold button pressed
 function handleHold() {
   const tempLibrary = new shapeLibrary(gridWidth)
+  // If first Hold
   if (holdShapeId === -1) {
+    // delete game shape and swap around position modifiers
     deleteShapeColor()
     const tempModifiers = currentShape.positionModifiers
     currentShape.positionModifiers = tempLibrary.basePositions[nextShapeId]
     
+    // check collision of new shape type at location
     if (!checkCollision()) {
+      // add shape to hold
       const originalPosition = currentShape.position
       addHold('#hold')
+      // build new shape
       currentShape.position = originalPosition
       buildShapeRandom()
+      // reposition new shape
       deleteShapeColor()
       currentShape.position = originalPosition
       buildShapeColor()
     } else {
+      // undo previous delete - Hold failed
       currentShape.positionModifiers = tempModifiers
       buildShapeColor()
     }
 
-  } else {
+  } else { // If not first Hold
+    // delete game shape and swap around position modifiers
     const originalPosition = currentShape.position
     deleteShapeColor()
     const tempModifiers = currentShape.positionModifiers
     currentShape.positionModifiers = tempLibrary.basePositions[holdShapeId]
     
+    // check collision of new shape type at location
     if (!checkCollision()) {
+      // add shape to hold
       const heldShapeId = holdShapeId
       addHold('#hold')
+      // swap with held shape and build new shape
       currentShape.position = originalPosition
       currentShape.nameId = heldShapeId
       statisticsScores[currentShape.nameId].textContent = parseInt(statisticsScores[currentShape.nameId].textContent) - 1
       buildGameShape()
     } else {
+      // undo previous delete - Hold failed
       currentShape.positionModifiers = tempModifiers
       buildShapeColor()
     }
   }
-}
-
-function handleStartDrop() {
-  downToggle = true
 }
 
 function rotateClockwise() {
@@ -345,14 +384,17 @@ function rotateCounterclockwise() {
 }
 
 function rotateCurrent(direction) {
+  // generate library and swap modifiers
   const gameLibrary = new shapeLibrary(gridWidth)
   const oldModifiers = currentShape.positionModifiers
   const newModifiers = []
+  // compare modifiers with library entries
   for (let indexTwo = 0; indexTwo < 4; indexTwo++) {
     for (let indexOne = 0; indexOne < 4; indexOne++) {
       for (let index = 0; index < 4; index++) {
         const rotations = gameLibrary.rotationTranslations[indexOne]
         const rotation = rotations[index]
+        // when match found move along library entry by one to find rotated modifier and add to new array
         if (oldModifiers[indexTwo] === rotation) {
           newModifiers.push(rotations[(index + direction + 4) % 4])
           index = 4
@@ -360,10 +402,24 @@ function rotateCurrent(direction) {
       }
     }
   }
+  // set new modifiers
   currentShape.positionModifiers = newModifiers
 }
 
+function pauseMenu() {
+  // pause menu made visible
+  document.querySelector('#pause-menu').style.display = 'flex'
+  gameOver = true
+}
+
+// if keys pressed down
 function handleKeyDown(event) {
+  // Pause Menu
+  if ((event.which || event.keyCode) === 27) {
+    // Escape Key
+    pauseMenu()
+  }
+
   // If game is over don't accept following button presses
   if (gameOver === true) {
     return
@@ -379,8 +435,9 @@ function handleKeyDown(event) {
       // Right Arrow Key
       handleRight()
       break
-    case 40:
-      handleStartDrop()
+    case 32:
+      // Spacebar Key
+      downToggle = true
       break
     case 88:
       // X Key
@@ -397,14 +454,17 @@ function handleKeyDown(event) {
   }
 }
 
+// if keys pressed up
 function handleKeyUp(event) {
   // If game is over ignore the following
   if (gameOver === true) {
     return
   }
 
+  // look at which key unpressed
   switch (event.which || event.keyCode) {
     case 40:
+      // Down Arrow key
       setSpeed(gameSpeedTime)
       break
   }
@@ -441,7 +501,48 @@ function handleRight() {
   }
 }
 
+function continueGame() {
+  // Hide pause menu
+  document.querySelector('#pause-menu').style.display = 'none'
+  // start interval
+  gameOver = false
+  setSpeed(gameSpeedTime)
+}
+
+function newGame() {
+  // Hide pause menu
+  document.querySelector('#pause-menu').style.display = 'none'
+  //reset everything
+  resetBoard()
+  // start interval
+  setSpeed(gameSpeedTime)
+}
+
+// reset board
+function resetBoard() {
+  // reset all variables
+  holdCells = []
+  currentLevel = 1
+  speedLevel = 0
+  speedToggle = false
+  downToggle = false
+  gameIntervalId
+  gameSpeedTime = 500
+  gameOver = false
+  gridWidth = 7
+  holdShapeId = -1
+  nextShapeId = Math.floor(Math.random() * 7)
+  // reset grids
+  document.querySelector('#hold').textContent = ''
+  document.querySelector('#next').textContent = ''
+  document.querySelector('#statistics').textContent = ''
+  document.querySelector('#board').textContent = ''
+  // start again
+  startUp()
+}
+
 function startUp() {
+  // Build grids for game at beginning
   buildHold(4, 2, document.querySelector('#hold'), 4)
   buildHold(4, 2, document.querySelector('#next'), 4)
   buildStats(7, 21, document.querySelector('#statistics'), 2.5)
@@ -452,28 +553,31 @@ function startUp() {
 
 // * Create Screen
 startUp()
-setSpeed(gameSpeedTime)
 
 // * Events
 window.addEventListener('keydown', handleKeyDown)
 window.addEventListener('keyup', handleKeyUp)
+document.getElementById('continue').addEventListener('click', continueGame)
+document.getElementById('new-game').addEventListener('click', newGame)
 
 
 
-// Intervals
+// * Intervals
 function setSpeed(speed) {
+  // clear previous interval - only one running at a time
   clearInterval(gameIntervalId)
   gameIntervalId = setInterval(function(){
-    shapeFall()
-    if (gameOver) {
-      console.log('Game Over')
+    // Times to inerupt:
+    if (gameOver) { // if gameover or pause menu - stop
       clearInterval(gameIntervalId)
-    } else if (speedToggle) {
+    } else if (speedToggle) { // if speed increased reset interval
       speedToggle = false
       setSpeed(gameSpeedTime)
-    } else if (downToggle) {
+    } else if (downToggle) { // as long as spacebar pressed set speed to fast
       downToggle = false
       setSpeed(100)
     }
+    // move shape down
+    shapeFall()
   }, speed)
 }
