@@ -6,9 +6,13 @@ My first project in the Software Engineering Immersive Course and my first time 
 
 ## Brief:
 **Goal:** Recreate the classic game Tetris.
+
 **Timeframe:** 1 week.
+
 **Group-size:** Solo.
+
 **Software used:** JavaScript, CSS, and HTML. 
+
 **Deployed version:** [https://kiratarik.github.io/sei-fifty-seven-project-one/](https://kiratarik.github.io/sei-fifty-seven-project-one/)
 
 ## Approach:
