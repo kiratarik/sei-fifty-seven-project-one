@@ -18,8 +18,8 @@ My first project in the Software Engineering Immersive Course and my first time 
 ## Menu:
 [link](Brief:)
 [link](Approach:)
-[link](Key Learnings/Takeaways:)
-[link](Future Features:)
+[link](Key-Learnings/Takeaways:)
+[link](Future-Features:)
 [link](Bugs:)
 
 ## Approach:
