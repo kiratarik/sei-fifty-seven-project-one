@@ -15,6 +15,13 @@ My first project in the Software Engineering Immersive Course and my first time 
 
 **Deployed version:** [https://kiratarik.github.io/sei-fifty-seven-project-one/](https://kiratarik.github.io/sei-fifty-seven-project-one/)
 
+## Menu:
+[link](Brief:)
+[link](Approach:)
+[link](Key Learnings/Takeaways:)
+[link](Future Features:)
+[link](Bugs:)
+
 ## Approach:
 My approach was to first code some basic styling and HTML framework before working on different parts of the game one at a time, reusing things I had code in previous sections in the new sections. I started out with having all required variables as inputs before switching some of them out with global variables later on. My code eventually grew more and more confusing and harder to debug over time.
 
@@ -56,21 +63,21 @@ I then added line completion, scoring, and a speeding up of the game over time. 
 
 I then added a pause menu, a new game function including a board rest, and a controls menu at the bottom.
 
-Wins:
+## Wins:
 A notable win was the rotation system that was generalised to all shapes. It reads the relative locations of the blocks and rewrites the stored locations based on what the relative locations were:
 ![image9](./ReadMeImages/9.png)
 ![image10](./ReadMeImages/10.png)
 
-Challenges:
+## Challenges:
 A notable challenge was getting the hold shape system to work: I was able to implement it in the end, however it resets the rotation of shapes that are held:
 ![image6](./ReadMeImages/6.png)
 ![image7](./ReadMeImages/7.png)
 
-Key Learnings/Takeaways:
+## Key Learnings/Takeaways:
 A Key learning was to use global variables and to separate the functions more clearly and to annotate more often:
 
-Future Features:
+## Future Features:
 Future Features are to fix the hold function to allow for rotation, and to set up a menu system that allows you to start the game at different speed levels.
 
-Bugs:
+## Bugs:
 A notable bug was the game crashing when rotating shapes near the borders of the board. This was fixed by not allowing the shapes to rotate in those circumstances.
