@@ -1,5 +1,13 @@
-# Tetris Game
-SEI57 Project One
+# General Assembly Project 1: Tetris Game
+![mainimage](./ReadMeImages/0.png)
+
+## Table of Contents:
+1. [Overview](#overview)
+1. [Brief](#brief)
+1. [Approach](#approach)
+1. [Key Learnings/Takeaways](#key-learningstakeaways)
+1. [Future Features](#future-features)
+1. [Bugs](#bugs)
 
 ## Overview:
 My first project in the Software Engineering Immersive Course and my first time coding a game. The project was to code Tetris including shape rotation, scoring, speedup and more.
@@ -14,13 +22,6 @@ My first project in the Software Engineering Immersive Course and my first time 
 **Software used:** JavaScript, CSS, and HTML. 
 
 **Deployed version:** [https://kiratarik.github.io/sei-fifty-seven-project-one/](https://kiratarik.github.io/sei-fifty-seven-project-one/)
-
-## Table of Contents:
-1. [Brief:](#brief)
-2. [Approach:](#approach)
-3. [Key Learnings/Takeaways:](#key-learningstakeaways)
-4. [Future Features:](#future-features)
-4. [Bugs:](#bugs)
 
 ## Approach:
 My approach was to first code some basic styling and HTML framework before working on different parts of the game one at a time, reusing things I had code in previous sections in the new sections. I started out with having all required variables as inputs before switching some of them out with global variables later on. My code eventually grew more and more confusing and harder to debug over time.
