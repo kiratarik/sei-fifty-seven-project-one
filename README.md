@@ -1,31 +1,18 @@
-# sei-fifty-seven-project-one
+# Tetris Game
 SEI57 Project One
-Tetris Game
 
-I had some basic planning then coded elements one at a time and used very few global elements and didn't anotate. This made things harder than they needed to be.
+## Overview:
+My first project in the Software Engineering Immersive Course and my first time coding a game. The project was to code Tetris including shape rotation, scoring, speedup and more.
 
-I started with some HTML and CSS building some basic framework and styling.
+## Brief:
+Goal: Recreate the classic game Tetris.
+Timeframe: 1 week.
+Group-size: Solo.
+Software used: JavaScript, CSS, and HTML. 
+Deployed version: [https://kiratarik.github.io/sei-fifty-seven-project-one/](https://kiratarik.github.io/sei-fifty-seven-project-one/)
 
-I started Javascript with building the grids; generalising it so i could reuse the function for the Hold, Next and Statistics area.
+## Approach:
+My approach was to first code some basic styling and HTML framework before working on different parts of the game one at a time, reusing things I had code in previous sections in the new sections. I started out with having all required variables as inputs before switching some of them out with global variables later on. My code eventually grew more and more confusing and harder to debug over time.
 
-I then created the Statistics area and built up the shape builder which was originally split into many functions with one for each shape before i condensed that part down to one function.
-
-After that I started coding the Main Game; adding random shapes and having them fall. I also coded the check collision then.
-
-Then i did the left and right controls before moving on to the Hold function. By this point i had decided to go through my code and change certain things to global variables and added the shape library class. 
-
-I then coded the Next shape, having to recode some previous sections, especially the Hold section.
-
-I then added line completion detection and levels and scoring and speedup.
-
-I then started going through my code and anotating before i made the pause menu.
-
-Then i addded the controlls description and title.
-
-Then i wrote the Readme before fixing some bugs.
-
-Overall there was a lot of coding and then checking and then finding where I went wrong. In some cases such as the Hold and Next areas there was a lot of searching involved.
-
-A point of pride was coding the shape library to take advantage of my shape building system to rotate my shapes. It was also useful in several other areas.
-
-Next time I'll plan more indepthly and anotate as I go, taking care to figure out where I need global variables.
+Of the options we were given I chose the hardest one: Tetris. First I made a rough wireframe of what I wanted and what I could add and what would be difficult:
+![image1](./ReadMeImages/1.png)
