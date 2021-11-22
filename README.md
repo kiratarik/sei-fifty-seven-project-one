@@ -16,11 +16,11 @@ My first project in the Software Engineering Immersive Course and my first time 
 **Deployed version:** [https://kiratarik.github.io/sei-fifty-seven-project-one/](https://kiratarik.github.io/sei-fifty-seven-project-one/)
 
 ## Menu:
-[link](Brief:)
-[link](Approach:)
-[link](Key-Learnings/Takeaways:)
-[link](Future-Features:)
-[link](Bugs:)
+[link](#Brief:)
+[link](#Approach:)
+[link](#Key-Learnings/Takeaways:)
+[link](#Future-Features:)
+[link](#Bugs:)
 
 ## Approach:
 My approach was to first code some basic styling and HTML framework before working on different parts of the game one at a time, reusing things I had code in previous sections in the new sections. I started out with having all required variables as inputs before switching some of them out with global variables later on. My code eventually grew more and more confusing and harder to debug over time.
