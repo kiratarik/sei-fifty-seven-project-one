@@ -32,7 +32,7 @@ My approach was to first code some basic styling and HTML framework before worki
 Of the options we were given I chose the hardest one: Tetris. First I made a rough wireframe of what I wanted and what I could add and what would be difficult:
 ![image1](./ReadMeImages/1.png)
 
-I then made some html structure for everything I had ideas of implementing including stretch goals. Although some of it I ended up not using and I commented it out as I did not have enough time to implement it or knowledge of how to do so yet. The rest I added to as needed while coding the JavaScript. The majority ended up being text and divs with ids that my JavaScript could target.
+I then made some HTML structure for everything I had ideas of implementing including stretch goals. Although some of it I ended up not using and I commented it out as I did not have enough time to implement it or knowledge of how to do so yet. The rest I added to as needed while coding the JavaScript. The majority ended up being text and divs with ids that my JavaScript could target.
 
 I then worked on some basic CSS, starting with some basic styling to separate sections, I later went back to make them look a bit nicer.
 
