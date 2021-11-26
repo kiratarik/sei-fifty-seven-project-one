@@ -4,6 +4,7 @@
 ## Table of Contents:
 1. [Overview](#overview)
 1. [Brief](#brief)
+1. [Planning](#planning)
 1. [Approach](#approach)
 1. [Wins](#wins)
 1. [Challenges](#challenges)
@@ -26,11 +27,12 @@ My first project in the Software Engineering Immersive Course and my first time 
 
 **Deployed version:** [https://kiratarik.github.io/sei-fifty-seven-project-one/](https://kiratarik.github.io/sei-fifty-seven-project-one/)
 
-## Approach:
-My approach was to first code some basic styling and HTML framework before working on different parts of the game one at a time, reusing things I had code in previous sections in the new sections. I started out with having all required variables as inputs before switching some of them out with global variables later on. My code eventually grew more and more confusing and harder to debug over time.
-
+## Planning:
 Of the options we were given I chose the hardest one: Tetris. First I made a rough wireframe of what I wanted and what I could add and what would be difficult:
 ![image1](./ReadMeImages/1.png)
+
+## Approach:
+My approach was to first code some basic styling and HTML framework before working on different parts of the game one at a time, reusing things I had code in previous sections in the new sections. I started out with having all required variables as inputs before switching some of them out with global variables later on. My code eventually grew more and more confusing and harder to debug over time.
 
 I then made some HTML structure for everything I had ideas of implementing including stretch goals. Although some of it I ended up not using and I commented it out as I did not have enough time to implement it or knowledge of how to do so yet. The rest I added to as needed while coding the JavaScript. The majority ended up being text and divs with ids that my JavaScript could target.
 
